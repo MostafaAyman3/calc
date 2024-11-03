@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CalcIt</title>
+        <style>
+    /* Calculator Container */
+    .calculator {
+      width: 320px;
+      background-color: #EDEDED; /* Neutral background color */
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+      margin: 40px auto;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Display Area */
+    .display {
+      background-color: #212121; /* Dark background for display */
+      color: white; /* White text for readability */
+      font-size: 24px; /* Typography for clarity */
+      font-weight: bold;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: right;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    /* Button Styles */
+    .button {
+      width: 70px;
+      height: 60px;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      background-color: #4CAF50; /* Green color for number and operator buttons */
+      cursor: pointer;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .button:hover {
+      background-color: #45A049; /* Slight color change for hover effect */
+    }
+
+    .button:active {
+      box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.3); /* Shadow effect on click */
+    }
+
+    /* Clear Button */
+    .button.clear {
+      background-color: #FF5733; /* Distinct color for Clear button */
+    }
+
+    /* Button Grid Layout */
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+    }
+  </style>
+    </head>
+    <body>
+
+        <div class="calculator">
+            <!-- Display Area -->
+            <div id="display" class="display">0</div>
+
+            <!-- Calculator Buttons -->
+            <div class="button-grid">
+                <button class="button" onclick="appendNumber('7')">7</button>
+                <button class="button" onclick="appendNumber('8')">8</button>
+                <button class="button" onclick="appendNumber('9')">9</button>
+                <button class="button" onclick="setOperator('/')">/</button>
+
+                <button class="button" onclick="appendNumber('4')">4</button>
+                <button class="button" onclick="appendNumber('5')">5</button>
+                <button class="button" onclick="appendNumber('6')">6</button>
+                <button class="button" onclick="setOperator('*')">×</button>
+
+                <button class="button" onclick="appendNumber('1')">1</button>
+                <button class="button" onclick="appendNumber('2')">2</button>
+                <button class="button" onclick="appendNumber('3')">3</button>
+                <button class="button" onclick="setOperator('-')">-</button>
+
+                <button class="button clear" onclick="clearDisplay()">C</button>
+                <button class="button" onclick="appendNumber('0')">0</button>
+                <button class="button" onclick="calculate()">=</button>
+                <button class="button" onclick="setOperator('+')">+</button>
+            </div>
+        </div>
+
+        <script>
+    let display = document.getElementById("display");
+    let currentInput = "";
+    let operator = null;
+    let previousInput = null;
+
+    function appendNumber(number) {
+      if (currentInput === "0" && number === "0") return; // Prevent multiple leading zeros
+      currentInput += number;
+      updateDisplay(currentInput);
+    }
+
+    function setOperator(op) {
+      if (currentInput === "") return; // Prevent setting an operator without a number
+      if (previousInput === null) {
+        previousInput = parseFloat(currentInput);
+      } else {
+        calculate(); // Calculate if there's already a previous input
+      }
+      operator = op;
+      currentInput = "";
+    }
+
+    function calculate() {
+      if (operator === null || currentInput === "") return;
+      let result;
+      switch (operator) {
+        case "+":
+          result = previousInput + parseFloat(currentInput);
+          break;
+        case "-":
+          result = previousInput - parseFloat(currentInput);
+          break;
+        case "*":
+          result = previousInput * parseFloat(currentInput);
+          break;
+        case "/":
+          if (currentInput === "0") {
+            alert("Cannot divide by zero");
+            clearDisplay();
+            return;
+          }
+          result = previousInput / parseFloat(currentInput);
+          break;
+      }
+      updateDisplay(result);
+      previousInput = result;
+      currentInput = "";
+      operator = null;
+    }
+
+    function clearDisplay() {
+      currentInput = "";
+      previousInput = null;
+      operator = null;
+      updateDisplay("0");
+    }
+
+    function updateDisplay(value) {
+      display.textContent = value.toString().substring(0, 10); // Limit to 10 characters
+    }
+  </script>
+
+    </body>
+</html>
